@@ -1,6 +1,6 @@
 /*  Button Watcher
  *
- *  Copyright (C) 2017-2018 Francisco 'Franc1sco' García
+ *  Copyright (C) 2017-2018 Francisco 'Franc1sco' García | Forked by w3st3ry, Supreme Elite
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -25,10 +25,9 @@ ConVar cv_showtype, cv_log, cv_onlyadmins;
 public Plugin myinfo =
 {
 	name = "Button Watcher",
-	author = "Franc1sco franug",
-	description = "Generates an output when a button is pressed",
-	version = "2.0",
-	url = "http://steamcommunity.com/id/franug"
+	author = "Franc1sco franug | Forked by w3st3ry, Supreme Elite",
+	description = "Generates an output in French when a button is pressed",
+	version = "2.1"
 };
 
 public void OnPluginStart()
@@ -40,7 +39,7 @@ public void OnPluginStart()
 	
 	cv_log = CreateConVar("sm_buttonwatcher_log", "1", "1 = enabled logging. 0 = disabled logging");
 	
-	cv_onlyadmins = CreateConVar("sm_buttonwatcher_onlyadmins", "0", "1 = show only for admins. 0 = show for everybody");
+	cv_onlyadmins = CreateConVar("sm_buttonwatcher_onlyadmins", "1", "1 = show only for admins. 0 = show for everybody");
 }
 
 public void Button_Pressed(const char[] output, int caller, int activator, float delay)
@@ -48,6 +47,8 @@ public void Button_Pressed(const char[] output, int caller, int activator, float
 	if(!IsValidClient(activator) || !IsValidEntity(caller)) return;
 	
 	if(g_bPressed[caller]) return;
+
+	char seHeader[] = "[SE Tracker]";
 	
 	decl String:entity[512];
 	GetEntPropString(caller, Prop_Data, "m_iName", entity, sizeof(entity));
@@ -56,7 +57,7 @@ public void Button_Pressed(const char[] output, int caller, int activator, float
 	{
 		if(!GetConVarBool(cv_onlyadmins)) 
 		{
-			PrintToChatAll(" \x02[BW] \x0C%N \x04pressed button\x0C %i %s", activator, caller, entity);
+			PrintToChatAll(" \x02%s \x0C%N \x04a appuyee sur\x0C %i %s", seHeader, activator, caller, entity);
 		}
 		else 
 		{
@@ -64,7 +65,7 @@ public void Button_Pressed(const char[] output, int caller, int activator, float
 			{	
 				if (IsClientInGame(i) && (GetUserAdmin(i) != INVALID_ADMIN_ID || IsClientSourceTV(i)))
 				{
-					PrintToChat(i, " \x02[BW] \x0C%N \x04pressed button\x0C %i %s", activator, caller, entity);
+					PrintToChat(i, " \x02%s \x0C%N \x04a appuyee sur\x0C %i %s", seHeader, activator, caller, entity);
 				}
 			}
 		}
@@ -73,7 +74,7 @@ public void Button_Pressed(const char[] output, int caller, int activator, float
 	{
 		if(!GetConVarBool(cv_onlyadmins)) 
 		{
-			PrintToConsoleAll("[BW] %N pressed button %i %s", activator, caller, entity);
+			PrintToConsoleAll("%s %N a appuyee sur %i %s", seHeader, activator, caller, entity);
 		}
 		else 
 		{
@@ -81,7 +82,7 @@ public void Button_Pressed(const char[] output, int caller, int activator, float
 			{	
 				if (IsClientInGame(i) && (GetUserAdmin(i) != INVALID_ADMIN_ID || IsClientSourceTV(i)))
 				{
-					PrintToConsole(i, "[BW] %N pressed button %i %s", activator, caller, entity);
+					PrintToConsole(i, "%s %N a appuyee sur %i %s", seHeader, activator, caller, entity);
 				}
 			}
 		}
@@ -89,7 +90,7 @@ public void Button_Pressed(const char[] output, int caller, int activator, float
 	}
 	
 	if(GetConVarBool(cv_log)) 
-		LogMessage("[BW] %L pressed the button %i %s", activator, caller, entity)
+		LogMessage("%s %L a appuyee sur %i %s", seHeader, activator, caller, entity)
 	
 	g_bPressed[caller] = true;
 	CreateTimer(5.0, Timer_End, caller);
