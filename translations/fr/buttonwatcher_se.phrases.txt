@@ -1,0 +1,14 @@
+"Phrases"
+{
+  "buttonwatcher_base"
+  {
+    "#format" "{1:s},{2:N},{3:i},{4:s}"
+    "fr"    "{1} {2} a appuye sur {3} {4}"
+  }
+
+  "buttonwatcher_colored"
+  {
+    "#format" "{1:s},{2:N},{3:i},{4:s}"
+    "fr"    " \x02{1} \x0C{2} \x04a appuye sur\x0C {3} {4}"
+  }
+}
